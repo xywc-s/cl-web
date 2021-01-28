@@ -8,15 +8,40 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+      title: '仪表板',
+      icon: 'mdi-view-dashboard'
+    }
+  },
+  {
+    path: '/keyword',
+    name: 'Keyword',
+    meta: {
+      title: '关键词分析',
+      icon: 'mdi-chart-line'
+    },
+    component: () => import('@/views/Keywords.vue'),
+  },
+  {
+    path: '/sale',
+    name: 'Sale',
+    meta: {
+      hidden: true,
+      title: '销量分析',
+      icon: 'mdi-chart-line'
+    },
+    component: () => import('@/views/Sale.vue')
   },
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    meta: {
+      hidden: true,
+      title: '关于',
+      icon: 'mdi-chart-line'
+    },
+    component: () => import('../views/About.vue')
   }
 ]
 

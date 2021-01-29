@@ -68,6 +68,7 @@ export default {
   },
 
   created() {
+    if (this.$vuetify.breakpoint.mobile) this.miniVariant = false
   }
 };
 </script>

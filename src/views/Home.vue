@@ -50,7 +50,7 @@
             <h3>今日进度</h3>
           </v-chip>
           <v-list class="mt-4">
-            <v-list-item v-for="item in list">
+            <v-list-item v-for="item in list" :key="item.text">
               <v-icon
                 :class="item.status==='process'?'loading':''"
                 :color="typeFormat(item.status)"

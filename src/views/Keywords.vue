@@ -123,6 +123,10 @@ export default {
       item.end_date = this.$dayjs.unix(item.end_date).format('YYYY-MM-DD')
     },
     daysFormat(item) {
+      if (item.start_date == item.end_date) {
+        item.days = 0
+        return
+      }
       let start = this.$dayjs.unix(item.start_date)
       let end = this.$dayjs.unix(item.end_date)
       item.days = this.$dayjs(start).from(end, true)

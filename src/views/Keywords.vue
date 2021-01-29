@@ -1,7 +1,7 @@
 <template>
   <section id="keyword-details" class="ma-4 mt-4">
     <v-row>
-      <v-col cols="3">
+      <v-col cols="12" sm="6" md="3">
         <v-autocomplete
           v-model="input_field"
           clearable

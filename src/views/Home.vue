@@ -1,7 +1,7 @@
 <template>
   <div class="home ma-4">
     <v-row class="d-flex mt-10">
-      <v-col cols="3" v-for="item in tags" :key="item.title">
+      <v-col cols="12" sm="6" lg="3" v-for="item in tags" :key="item.title" align-self="stretch">
         <v-card :color="item.color">
           <div class="d-flex justify-space-between align-center py-8 px-6">
             <h2 class="white--text">{{item.title}}</h2>
@@ -11,7 +11,7 @@
       </v-col>
     </v-row>
     <v-row class="d-flex mt-10">
-      <v-col cols="7">
+      <v-col md="7" cols="12">
         <v-card class="pa-4">
           <v-chip outlined color="primary">
             <v-icon left>mdi-file-word-box-outline</v-icon>
@@ -43,7 +43,7 @@
           </v-data-table>
         </v-card>
       </v-col>
-      <v-col cols="5">
+      <v-col md="5" cols="12" :order="$vuetify.breakpoint.smAndDown?'first':undefined">
         <v-card class="pa-4">
           <v-chip outlined color="deep-purple lighten-1">
             <v-icon left>mdi-download-network-outline</v-icon>
@@ -81,7 +81,7 @@ export default {
       count: 10
     }, {
       color: 'orange',
-      title: '今日跟踪总词数',
+      title: '今日总词数',
       count: 10
     }, {
       color: 'green',

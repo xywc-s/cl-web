@@ -2,10 +2,9 @@
   <v-app>
     <v-navigation-drawer
       app
+      v-model="miniVariant"
       color="primary"
       dark
-      disable-resize-watcher
-      :mini-variant="miniVariant"
       overlay-opacity="0.3"
       src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
     >
@@ -38,7 +37,9 @@
       <!-- -->
     </v-navigation-drawer>
     <v-app-bar app>
-      <div class="d-flex align-center"></div>
+      <div class="d-flex align-center">
+        <v-icon @click="miniVariant = !miniVariant">mdi-menu</v-icon>
+      </div>
       <v-spacer></v-spacer>
     </v-app-bar>
 
@@ -57,7 +58,7 @@ export default {
   },
 
   data: () => ({
-    miniVariant: false,
+    miniVariant: true,
 
   }),
   computed: {
@@ -67,7 +68,6 @@ export default {
   },
 
   created() {
-
   }
 };
 </script>

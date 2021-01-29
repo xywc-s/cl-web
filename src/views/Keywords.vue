@@ -124,7 +124,7 @@ export default {
     },
     daysFormat(item) {
       if (item.start_date == item.end_date) {
-        item.days = 0
+        item.days = 1
         return
       }
       let start = this.$dayjs.unix(item.start_date)

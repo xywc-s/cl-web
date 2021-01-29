@@ -120,7 +120,6 @@ export default {
     async fetchData() {
       this.loading = true
       const res = await allViews();
-      console.log(res);
       this.desserts = res
       this.loading = false
     },

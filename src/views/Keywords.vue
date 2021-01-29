@@ -133,8 +133,12 @@ export default {
     },
     dailySaleFormat(item) {
       let total = item.end_sale - item.start_sale
-      const reg = new RegExp(/\d+/)
-      item.avg_sale = Math.round(total / parseInt(reg.exec(item.days)[0]))
+      if (total && item.days) {
+        const reg = new RegExp(/\d+/)
+        item.avg_sale = Math.round(total / parseInt(reg.exec(item.days)[0]))
+      } else {
+        item.avg_sale = 0
+      }
     },
     directToProduct(src) {
       window.open(src)

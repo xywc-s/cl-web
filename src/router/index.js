@@ -24,6 +24,15 @@ const routes = [
     component: () => import('@/views/Keywords.vue'),
   },
   {
+    path: '/job',
+    name: 'Job',
+    meta: {
+      title: '计划任务',
+      icon: 'mdi-clock-time-two-outline'
+    },
+    component: () => import('@/views/Job.vue')
+  },
+  {
     path: '/sale',
     name: 'Sale',
     meta: {

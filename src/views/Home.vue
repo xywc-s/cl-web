@@ -23,6 +23,8 @@
             class="mt-4"
             :headers="headers"
             :items="desserts"
+            sort-by="end_date"
+            sort-desc
             :items-per-page="5"
           >
             <template v-slot:item.days="{item}">{{daysFormat(item)}}</template>
@@ -127,9 +129,9 @@ export default {
 
     },
     daysFormat(item) {
-      let start = this.$dayjs.unix(item.start_date)
-      let end = this.$dayjs.unix(item.end_date)
-      return this.$dayjs(start).from(end, true)
+      let start = this.$dayjs.unix(item.start_date).format('YYYY-MM-DD')
+      let end = this.$dayjs.unix(item.end_date).format('YYYY-MM-DD')
+      return this.$dayjs(end).add(1, 'd').diff(this.$dayjs(start), 'd') + '天'
     },
     endDateFormat(item) {
       return this.$dayjs.unix(item.end_date).format('YYYY-M-D HH:mm')

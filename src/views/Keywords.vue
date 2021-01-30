@@ -22,6 +22,8 @@
       class="mt-0"
       :items="desserts"
       :headers="headers"
+      sort-by="avg_sale"
+      sort-desc
       :items-per-page="10"
     >
       <template v-slot:item.img="{item}">
@@ -110,9 +112,9 @@ export default {
       this.loading = true
       const res = await keywordDetail(key)
       res.forEach(item => {
+        this.dateFormat(item)
         this.daysFormat(item)
         this.dailySaleFormat(item)
-        this.dateFormat(item)
       });
       this.desserts = res
       this.loading = false
@@ -123,13 +125,9 @@ export default {
       item.end_date = this.$dayjs.unix(item.end_date).format('YYYY-MM-DD')
     },
     daysFormat(item) {
-      if (item.start_date == item.end_date) {
-        item.days = 1
-        return
-      }
-      let start = this.$dayjs.unix(item.start_date)
-      let end = this.$dayjs.unix(item.end_date)
-      item.days = this.$dayjs(start).from(end, true)
+      let start = this.$dayjs(item.start_date)
+      let end = this.$dayjs(item.end_date)
+      item.days = end.diff(start, 'day') + 1 + '天'
     },
     dailySaleFormat(item) {
       let total = item.end_sale - item.start_sale

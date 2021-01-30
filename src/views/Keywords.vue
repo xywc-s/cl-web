@@ -31,6 +31,30 @@
           <img :src="item.img" />
         </v-avatar>
       </template>
+      <template v-slot:item.trend="{item}">
+        <v-sparkline
+          :value="item.trend"
+          :gradient="['#f72047', '#ffd200', '#1feaea']"
+          :padding="2"
+          :line-width="10"
+          stroke-linecap="round"
+          gradient-direction="top"
+          type="trend"
+          auto-draw
+        ></v-sparkline>
+      </template>
+      <template v-slot:item.daily_trend="{item}">
+        <v-sparkline
+          :value="dailyTrend(item.trend)"
+          :gradient="['#f72047', '#ffd200', '#1feaea']"
+          :padding="3"
+          :line-width="10"
+          stroke-linecap="round"
+          gradient-direction="top"
+          type="trend"
+          auto-draw
+        ></v-sparkline>
+      </template>
       <template v-slot:item.operate="{item}">
         <v-tooltip right>
           <template v-slot:activator="{on, attr}">
@@ -85,6 +109,16 @@ export default {
       {
         text: '日均销量',
         value: 'avg_sale'
+      },
+      {
+        text: '销量趋势',
+        value: 'trend',
+        sortable: false
+      },
+      {
+        text: '单日趋势',
+        value: 'daily_trend',
+        sortable: false
       },
       {
         text: '首次抓取日期',
@@ -150,6 +184,13 @@ export default {
       let item = this.items.find(item => item.name === val)
       if (item.value !== this.search)
         this.fetchData(this.input_field)
+    },
+    dailyTrend(arr) {
+      return arr.reduce((pre, cur, index) => {
+        if (index < arr.length - 1)
+          pre.push(arr[index + 1] - cur)
+        return pre
+      }, [])
     }
   },
   created() {

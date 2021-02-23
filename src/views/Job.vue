@@ -51,23 +51,70 @@
       </template>
 
       <template v-slot:item.strategy="{ item }">{{strategies_descriptions[item.strategy]}}</template>
-      <template v-slot:item.status="{ item }">{{job_status[item.status]}}</template>
-      <template
-        v-slot:item.progress="{ item }"
-      >{{item.progress ? `${item.progress}/${item.cycle}`: item.progress}}</template>
+      <template v-slot:item.status="{ item }">
+        <v-chip :color="item.status | statusFilter">{{job_status[item.status]}}</v-chip>
+      </template>
+      <template v-slot:item.progress="{ item }">
+        <v-progress-circular
+          :rotate="-90"
+          :size="40"
+          :value="(item.progress ? (item.progress/item.cycle): item.progress)*100"
+          color="light-blue accent-4"
+        >{{item.progress ? `${item.progress}/${item.cycle}`: item.progress}}</v-progress-circular>
+      </template>
       <template
         v-slot:item.created_at="{ item }"
       >{{$dayjs(item.created_at).format('YYYY-MM-DD HH:mm')}}</template>
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              color="error"
+              class="mr-2"
+              v-on="on"
+              v-bind="attrs"
+              @click="deleteItem(item)"
+            >mdi-delete</v-icon>
+          </template>
+          删除
+        </v-tooltip>
+        <v-tooltip top v-if="is_admin && item.status !== 2">
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              color="success"
+              class="mr-2"
+              v-on="on"
+              v-bind="attrs"
+              @click="updateItem(item)"
+            >mdi-update</v-icon>
+          </template>
+          更新
+        </v-tooltip>
+        <v-tooltip top v-if="is_admin">
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              color="primary"
+              v-on="on"
+              v-bind="attrs"
+              @click="copyItem(item)"
+            >mdi-content-copy</v-icon>
+          </template>
+          复制命令
+        </v-tooltip>
       </template>
     </v-data-table>
   </section>
 </template>
 
 <script>
-import { createJob, getAllJobs } from '@/api';
+import { createJob, getAllJobs, deleteJob, updateJob } from '@/api';
 export default {
+  filters: {
+    statusFilter(val) {
+      const status_colors = ['', 'amber lighten-2', 'success']
+      return status_colors[val]
+    }
+  },
   data: () => ({
     dialog: false,
     headers: [
@@ -81,7 +128,8 @@ export default {
       { text: '周期(天)', value: 'cycle' },
       { text: '状态', value: 'status', filterable: true },
       { text: '进度', value: 'progress' },
-      { text: '创建时间', value: 'created_at' }
+      { text: '创建时间', value: 'created_at' },
+      { text: '操作', value: 'actions', sortable: false }
     ],
     desserts: [],
     editedItem: {
@@ -132,6 +180,9 @@ export default {
       let columns = ['keyword', 'strategy', 'cycle', 'stauts', 'progress', 'created_at']
       columns.push('actions')
       return columns
+    },
+    is_admin() {
+      return !!this.$route.query.admin
     }
   },
 
@@ -143,7 +194,6 @@ export default {
 
   mounted() {
     this.initialize()
-    if (this.$route.query.admin) this.headers.push({ text: '操作', value: 'actions', sortable: false })
   },
 
   methods: {
@@ -152,9 +202,32 @@ export default {
       this.desserts = data
     },
 
-    deleteItem(item) {
-      const index = this.desserts.indexOf(item)
-      confirm('确认删除这项任务吗?') && this.desserts.splice(index, 1)
+    async deleteItem(item) {
+      const is_delete = confirm('确认删除这项任务吗?')
+      if (is_delete) {
+        await deleteJob({ id: item._id })
+        this.initialize()
+      }
+    },
+
+    async updateItem(item) {
+      await updateJob(item)
+      this.initialize()
+    },
+
+    copyItem(item) {
+      let keyword, keyword_arr = item.keyword.split(' ');
+      if (keyword_arr.length > 1) {
+        keyword = keyword_arr.join('-')
+      } else {
+        keyword = keyword_arr[0]
+      }
+      let aux = document.createElement("input");
+      aux.setAttribute("value", `scrapy crawl mercador -a keyword=${keyword}`);
+      document.body.appendChild(aux);
+      aux.select();
+      document.execCommand("copy");
+      document.body.removeChild(aux);
     },
 
     close() {

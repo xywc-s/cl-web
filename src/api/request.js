@@ -1,5 +1,5 @@
-import axios from 'axios'
-
+import axios from 'axios';
+import Vue from 'vue';
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -32,14 +32,13 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    const res = response.data
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 200) {
-      console.log('err' + res.message) // for debug
-      return Promise.reject(new Error(res.message || 'Error'))
+    const { data, message, code } = response.data
+    if (code !== 200) {
+      Vue.prototype.$notify.success(message);
+      return Promise.reject(new Error(message || 'Error'))
     } else {
-      if (res.message) console.log(res.message);
-      return res.data
+      if (message) Vue.prototype.$notify.success(message);
+      return data
     }
   },
   error => {

@@ -46,15 +46,18 @@
     <v-main>
       <router-view></router-view>
     </v-main>
+
+    <snackbar></snackbar>
   </v-app>
 </template>
 
 <script>
-
+import Snackbar from '@/components/Snackbar';
 export default {
   name: 'App',
 
   components: {
+    Snackbar
   },
 
   data: () => ({
